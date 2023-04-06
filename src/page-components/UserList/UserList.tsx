@@ -21,7 +21,7 @@ export const UserList = () => {
       <div className="row justify-content-start">
         {users
           .filter((user) =>
-            user.firstName
+            user.username
               .toLowerCase()
               .startsWith(userSearchQuery.toLowerCase())
           )

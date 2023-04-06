@@ -5,11 +5,27 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { UserList } from './page-components/UserList/UserList';
 import { SnackbarProvider } from 'notistack';
+import { getUserById } from './common/UserLocalStorageController';
+import { UserCreateForm } from './page-components/UserCreateForm/UserCreateForm';
+
+export function loader(props: any) {
+  const { request } = props;
+  const url = new URL(request.url);
+  const currentUserId = Number(url.searchParams.get('userId'));
+  const currentUser = getUserById(currentUserId);
+
+  return { currentUser };
+}
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <UserList />,
+  },
+  {
+    path: '/form',
+    element: <UserCreateForm />,
+    loader,
   },
 ]);
 
