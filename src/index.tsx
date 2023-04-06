@@ -8,7 +8,7 @@ import { SnackbarProvider } from 'notistack';
 import { getUserById } from './common/UserLocalStorageController';
 import { UserCreateForm } from './page-components/UserCreateForm/UserCreateForm';
 
-export function loader(props: any) {
+function loader(props: any) {
   const { request } = props;
   const url = new URL(request.url);
   const currentUserId = Number(url.searchParams.get('userId'));
