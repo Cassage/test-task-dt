@@ -1,7 +1,7 @@
 import { Button } from 'react-bootstrap';
 import { UserCard } from './UserCard/UserCard';
 import { Link } from 'react-router-dom';
-import { getUsers } from '../../common/userLocalStorageFunctions';
+import { getUsers } from '../../common/UserLocalStorageController';
 import { useState } from 'react';
 
 export const UserList = () => {
