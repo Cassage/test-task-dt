@@ -10,6 +10,6 @@ export const emptyUser: IUser = {
   workBorders: [],
 };
 
-export const errorMessage = (error: string | string[]) => {
+export const errorMessage = (error: string) => {
   return <div className="invalid-feedback d-block">{error}</div>;
 };
