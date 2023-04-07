@@ -49,7 +49,15 @@ export const UserCreateForm = () => {
         });
       }}
     >
-      {({ errors, touched, setValues, isValid, values, setErrors }) => {
+      {({
+        errors,
+        touched,
+        setValues,
+        isValid,
+        values,
+        setErrors,
+        setTouched,
+      }) => {
         const generateError = (key: keyof IUser) => {
           const currentError = errors[key];
 
@@ -110,20 +118,21 @@ export const UserCreateForm = () => {
                       const roles = rolesObjects.map(
                         (rolesObject) => rolesObject.value
                       );
+                      touched.roles = true;
                       manuallyValidateArrayField(
                         errors,
                         setErrors,
                         'roles',
                         roles
                       );
-                      touched.roles = true;
+
                       setValues((prevState) => {
                         return { ...prevState, roles };
                       });
                     }}
                     options={rolesOptions}
                     defaultValue={rolesOptions.filter((rolesOption) =>
-                      user.roles.find((role) => role === rolesOption.value)
+                      values.roles.find((role) => role === rolesOption.value)
                     )}
                   />
 
@@ -139,6 +148,11 @@ export const UserCreateForm = () => {
                   </div>
                   <Select
                     isMulti
+                    onFocus={() => {
+                      touched.workBorders =
+                        true as unknown as FormikTouched<IWorkBorders>[];
+                      setTouched({ ...touched });
+                    }}
                     placeholder="Зона работы"
                     onChange={(workBordersObjects) => {
                       const workBorders = workBordersObjects.map(
@@ -150,9 +164,7 @@ export const UserCreateForm = () => {
                         'workBorders',
                         workBorders
                       );
-                      touched.workBorders =
-                        true as unknown as FormikTouched<IWorkBorders>[];
-                      validateArrayField(workBorders);
+
                       setValues((prevState) => {
                         return { ...prevState, workBorders };
                       });
