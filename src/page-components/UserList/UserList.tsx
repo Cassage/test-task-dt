@@ -11,13 +11,20 @@ export const UserList = () => {
 
   return (
     <div className="container pt-3">
-      {!!users.length && (
-        <input
-          placeholder="Юзернейм"
-          value={userSearchQuery}
-          onChange={(e) => setUserSearchQuery(e.currentTarget.value)}
-        />
-      )}
+      <div className="d-flex gap-3">
+        {!!users.length && (
+          <input
+            placeholder="Юзернейм"
+            value={userSearchQuery}
+            onChange={(e) => setUserSearchQuery(e.currentTarget.value)}
+          />
+        )}
+        <Link to={`/form`}>
+          <Button style={{ float: 'right' }}>
+            Добавить нового пользователя
+          </Button>
+        </Link>
+      </div>
       <div className="row justify-content-start">
         {users
           .filter((user) =>
@@ -29,9 +36,6 @@ export const UserList = () => {
             return <UserCard key={index} user={user} />;
           })}
       </div>
-      <Link to={`/form`} className="fixed-bottom p-4">
-        <Button style={{ float: 'right' }}>Добавить нового пользователя</Button>
-      </Link>
     </div>
   );
 };
