@@ -37,7 +37,7 @@ export const addUser = (user: IUser) => {
 
   user.id = userId;
 
-  users.push(user);
+  users.unshift(user);
 
   localStorage.setItem('users', JSON.stringify(users));
 };
