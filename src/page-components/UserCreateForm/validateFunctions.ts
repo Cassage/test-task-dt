@@ -1,5 +1,5 @@
 import { FormikErrors } from 'formik';
-import { IUser, ERoles, IWorkBorders } from '../../common/UserDataModel';
+import { ERoles, IUser, IWorkBorders } from '../../common/UserDataModel';
 
 const required = 'Это поле необходимо заполнить';
 
@@ -19,7 +19,19 @@ export const validateStringField = (value: string, minLength: number) => {
   return error;
 };
 
-export const validateArrayField = (
+export const validateArrayField = (value: ERoles[] | IWorkBorders[]) => {
+  console.log(value);
+  let error;
+  switch (true) {
+    case !value.length:
+      error = required;
+      break;
+  }
+
+  return error;
+};
+
+export const manuallyValidateArrayField = (
   errors: FormikErrors<IUser>,
   setErrors: (errors: FormikErrors<IUser>) => void,
   key: 'roles' | 'workBorders',

@@ -8,7 +8,11 @@ import {
   modifyUser,
 } from '../../common/UserLocalStorageController';
 import { useSnackbar } from 'notistack';
-import { validateStringField, validateArrayField } from './validateFunctions';
+import {
+  validateStringField,
+  validateArrayField,
+  manuallyValidateArrayField,
+} from './validateFunctions';
 import { rolesOptions, workBordersOptions } from './multiselectOptions';
 import { emptyUser, errorMessage } from './additionalFormConsts';
 
@@ -45,7 +49,7 @@ export const UserCreateForm = () => {
         });
       }}
     >
-      {({ errors, touched, setValues, isValid, setErrors }) => {
+      {({ errors, touched, setValues, isValid, values, setErrors }) => {
         const generateError = (key: keyof IUser) => {
           const currentError = errors[key];
 
@@ -91,6 +95,14 @@ export const UserCreateForm = () => {
                 </div>
 
                 <div className="form-group">
+                  <div className="d-none">
+                    <Field
+                      name="roles"
+                      value={values.roles}
+                      validate={validateArrayField}
+                    />
+                  </div>
+
                   <Select
                     isMulti
                     placeholder="Роль"
@@ -98,7 +110,12 @@ export const UserCreateForm = () => {
                       const roles = rolesObjects.map(
                         (rolesObject) => rolesObject.value
                       );
-                      validateArrayField(errors, setErrors, 'roles', roles);
+                      manuallyValidateArrayField(
+                        errors,
+                        setErrors,
+                        'roles',
+                        roles
+                      );
                       touched.roles = true;
                       setValues((prevState) => {
                         return { ...prevState, roles };
@@ -109,9 +126,17 @@ export const UserCreateForm = () => {
                       user.roles.find((role) => role === rolesOption.value)
                     )}
                   />
+
                   {generateError('roles')}
                 </div>
                 <div className="form-group">
+                  <div className="d-none">
+                    <Field
+                      name="workBorders"
+                      value={values.workBorders}
+                      validate={validateArrayField}
+                    />
+                  </div>
                   <Select
                     isMulti
                     placeholder="Зона работы"
@@ -119,7 +144,7 @@ export const UserCreateForm = () => {
                       const workBorders = workBordersObjects.map(
                         (workBorderObject) => workBorderObject.value
                       );
-                      validateArrayField(
+                      manuallyValidateArrayField(
                         errors,
                         setErrors,
                         'workBorders',
@@ -127,6 +152,7 @@ export const UserCreateForm = () => {
                       );
                       touched.workBorders =
                         true as unknown as FormikTouched<IWorkBorders>[];
+                      validateArrayField(workBorders);
                       setValues((prevState) => {
                         return { ...prevState, workBorders };
                       });
