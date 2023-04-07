@@ -33,7 +33,7 @@ export const addUser = (user: IUser) => {
     users = [];
   }
 
-  const userId = users[users.length - 1]?.id + 1 || 1;
+  const userId = users[0]?.id + 1 || 1;
 
   user.id = userId;
 
