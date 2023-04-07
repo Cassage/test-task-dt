@@ -32,7 +32,6 @@ export const validateArrayField = (value: ERoles[] | IWorkBorders[]) => {
 
 export const manuallyValidateArrayField = (
   errors: FormikErrors<IUser>,
-  setErrors: (errors: FormikErrors<IUser>) => void,
   key: 'roles' | 'workBorders',
   value: ERoles[] | IWorkBorders[]
 ) => {
@@ -43,6 +42,4 @@ export const manuallyValidateArrayField = (
     default:
       delete errors[key];
   }
-
-  setErrors({ ...errors });
 };

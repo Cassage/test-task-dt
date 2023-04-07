@@ -49,15 +49,7 @@ export const UserCreateForm = () => {
         });
       }}
     >
-      {({
-        errors,
-        touched,
-        setValues,
-        isValid,
-        values,
-        setErrors,
-        setTouched,
-      }) => {
+      {({ errors, touched, setValues, isValid, values }) => {
         const generateError = (key: keyof IUser) => {
           const currentError = errors[key];
 
@@ -119,12 +111,7 @@ export const UserCreateForm = () => {
                         (rolesObject) => rolesObject.value
                       );
                       touched.roles = true;
-                      manuallyValidateArrayField(
-                        errors,
-                        setErrors,
-                        'roles',
-                        roles
-                      );
+                      manuallyValidateArrayField(errors, 'roles', roles);
 
                       setValues((prevState) => {
                         return { ...prevState, roles };
@@ -151,16 +138,15 @@ export const UserCreateForm = () => {
                     onFocus={() => {
                       touched.workBorders =
                         true as unknown as FormikTouched<IWorkBorders>[];
-                      setTouched({ ...touched });
                     }}
                     placeholder="Зона работы"
                     onChange={(workBordersObjects) => {
                       const workBorders = workBordersObjects.map(
                         (workBorderObject) => workBorderObject.value
                       );
+
                       manuallyValidateArrayField(
                         errors,
-                        setErrors,
                         'workBorders',
                         workBorders
                       );
@@ -171,7 +157,7 @@ export const UserCreateForm = () => {
                     }}
                     defaultValue={workBordersOptions.filter(
                       (workBordersOption) =>
-                        user.workBorders.find(
+                        values.workBorders.find(
                           (workBorder) =>
                             workBorder.id === workBordersOption.value.id
                         )
