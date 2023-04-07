@@ -10,40 +10,14 @@ import {
 } from './validateFunctions';
 import { rolesOptions, workBordersOptions } from './multiselectOptions';
 import { emptyUser, errorMessage } from './additionalFormConsts';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useEffect } from 'react';
-
-const ADD_USER = gql`
-  mutation addUser($user: [IUser]) {
-    addUser(user: $user) @client
-  }
-`;
-
-const MODIFY_USER = gql`
-  mutation modifyUser($user: [IUser]) {
-    modifyUser(user: $user) @client
-  }
-`;
-
-const DELETE_USER = gql`
-  mutation deleteUser($currentUserId: Int!) {
-    deleteUser(id: $currentUserId) @client
-  }
-`;
-
-const GET_USER_BY_ID = gql`
-  query GetUserById($currentUserId: Int!) {
-    getUserById(id: $currentUserId) @client {
-      firstName
-      id
-      lastName
-      username
-      workBorders
-      roles
-      password
-    }
-  }
-`;
+import { GET_USER_BY_ID } from '../../common/apolloQueries';
+import {
+  ADD_USER,
+  MODIFY_USER,
+  DELETE_USER,
+} from '../../common/apolloMutations';
 
 interface UserCreateFormProps {
   currentUserId: number;
@@ -56,7 +30,8 @@ export const UserCreateForm = () => {
     variables: { currentUserId },
   });
 
-  const currentUser: IUser = data?.getUserById || emptyUser;
+  const currentUser: IUser = data?.getUserById;
+  const user = currentUser || emptyUser;
 
   const [addUser] = useMutation(ADD_USER);
   const [modifyUser] = useMutation(MODIFY_USER);
@@ -78,7 +53,7 @@ export const UserCreateForm = () => {
       validateOnChange={false}
       validateOnBlur={true}
       validateOnMount={true}
-      initialValues={currentUser}
+      initialValues={user}
       onSubmit={(user) => {
         const message = currentUser
           ? 'Пользователь успешно обновлён'
