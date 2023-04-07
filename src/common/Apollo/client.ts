@@ -47,12 +47,14 @@ const client = new ApolloClient({
 
         const { users } = cache.readQuery({ query });
 
+        const usersCopy = [...users];
+
         const userIndex = users.findIndex((user: IUser) => user.id === id);
 
-        users[userIndex] = user;
+        usersCopy[userIndex] = user;
 
         const data = {
-          users: [user, ...users],
+          users: [...usersCopy],
         };
 
         cache.writeQuery({ query, data });
