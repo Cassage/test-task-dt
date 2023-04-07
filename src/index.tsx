@@ -7,7 +7,7 @@ import { SnackbarProvider } from 'notistack';
 import { ApolloProvider } from '@apollo/client';
 import { UserCreateForm } from './page-components/UserCreateForm/UserCreateForm';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { GET_USERS } from './common/apolloQueries';
+import { GET_USERS } from './common/Apollo/apolloQueries';
 import client from './common/Apollo/client';
 
 const apolloClient = client;

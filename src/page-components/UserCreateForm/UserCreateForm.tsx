@@ -11,13 +11,12 @@ import {
 import { rolesOptions, workBordersOptions } from './multiselectOptions';
 import { emptyUser, errorMessage } from './additionalFormConsts';
 import { useMutation, useQuery } from '@apollo/client';
-import { useEffect } from 'react';
-import { GET_USER_BY_ID } from '../../common/apolloQueries';
+import { GET_USER_BY_ID } from '../../common/Apollo/apolloQueries';
 import {
   ADD_USER,
   MODIFY_USER,
   DELETE_USER,
-} from '../../common/apolloMutations';
+} from '../../common/Apollo/apolloMutations';
 
 interface UserCreateFormProps {
   currentUserId: number;
@@ -26,12 +25,12 @@ interface UserCreateFormProps {
 export const UserCreateForm = () => {
   const { currentUserId } = useLoaderData() as UserCreateFormProps;
 
-  const { data } = useQuery(GET_USER_BY_ID, {
+  const { data, loading } = useQuery(GET_USER_BY_ID, {
     variables: { currentUserId },
   });
 
-  const currentUser: IUser = data?.getUserById;
-  const user = currentUser || emptyUser;
+  const currentUser = data?.getUserById;
+  const user: IUser = currentUser || emptyUser;
 
   const [addUser] = useMutation(ADD_USER);
   const [modifyUser] = useMutation(MODIFY_USER);
@@ -44,11 +43,9 @@ export const UserCreateForm = () => {
     navigate('/');
   };
 
-  useEffect(() => {
-    console.log('hehe');
-  }, [currentUser]);
-
-  return (
+  return loading ? (
+    <div>Loading...</div>
+  ) : (
     <Formik
       validateOnChange={false}
       validateOnBlur={true}

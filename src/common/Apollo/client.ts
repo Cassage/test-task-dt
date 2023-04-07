@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { GET_USERS } from '../apolloQueries';
+import { GET_USERS } from './apolloQueries';
 import { IUser } from '../UserDataModel';
 
 const cache = new InMemoryCache();
@@ -27,6 +27,8 @@ const client = new ApolloClient({
         const query = GET_USERS;
 
         const { users } = cache.readQuery({ query });
+
+        user.id = users[0]?.id + 1 || 1;
 
         const data = {
           users: [user, ...users],
