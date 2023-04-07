@@ -22,16 +22,7 @@ export const getUserById = (id: number) => {
 };
 
 export const addUser = (user: IUser) => {
-  let users: IUser[] = [];
-  try {
-    const stringifiedUsers = localStorage.getItem('users');
-
-    if (stringifiedUsers !== null) {
-      users = JSON.parse(stringifiedUsers);
-    }
-  } catch (e) {
-    users = [];
-  }
+  const users = getUsers();
 
   const userId = users[0]?.id + 1 || 1;
 
@@ -44,16 +35,7 @@ export const addUser = (user: IUser) => {
 
 export const modifyUser = (user: IUser) => {
   const { id } = user;
-  let users: IUser[] = [];
-  try {
-    const stringifiedUsers = localStorage.getItem('users');
-
-    if (stringifiedUsers !== null) {
-      users = JSON.parse(stringifiedUsers);
-    }
-  } catch (e) {
-    users = [];
-  }
+  const users = getUsers();
 
   const userIndex = users.findIndex((user) => user.id === id);
 
@@ -63,16 +45,7 @@ export const modifyUser = (user: IUser) => {
 };
 
 export const deleteUser = (id: number) => {
-  let users: IUser[] = [];
-  try {
-    const stringifiedUsers = localStorage.getItem('users');
-
-    if (stringifiedUsers !== null) {
-      users = JSON.parse(stringifiedUsers);
-    }
-  } catch (e) {
-    users = [];
-  }
+  const users = getUsers();
 
   const userIndex = users.findIndex((user) => user.id === id);
 

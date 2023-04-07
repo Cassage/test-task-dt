@@ -20,7 +20,6 @@ export const validateStringField = (value: string, minLength: number) => {
 };
 
 export const validateArrayField = (value: ERoles[] | IWorkBorders[]) => {
-  console.log(value);
   let error;
   switch (true) {
     case !value.length:
@@ -40,9 +39,10 @@ export const manuallyValidateArrayField = (
   switch (true) {
     case !value.length:
       errors[key] = required;
-      setErrors({ ...errors });
       break;
     default:
       delete errors[key];
   }
+
+  setErrors({ ...errors });
 };
