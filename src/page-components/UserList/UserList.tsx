@@ -1,11 +1,25 @@
 import { Button } from 'react-bootstrap';
 import { UserCard } from './UserCard/UserCard';
 import { Link } from 'react-router-dom';
-import { getUsers } from '../../common/UserLocalStorageController';
 import { useState } from 'react';
+import { gql, useQuery } from '@apollo/client';
+import { IUser } from '../../common/UserDataModel';
+
+const GET_USERS = gql`
+  query getUsers {
+    users @client {
+      id
+      username
+      firstName
+      lastName
+    }
+  }
+`;
 
 export const UserList = () => {
-  const users = getUsers();
+  const { data } = useQuery(GET_USERS);
+
+  const { users } = data;
 
   const [userSearchQuery, setUserSearchQuery] = useState<string>('');
 
@@ -26,7 +40,7 @@ export const UserList = () => {
         </Link>
       </div>
       <div className="row justify-content-start">
-        {users
+        {(users as IUser[])
           .filter((user) =>
             user.username
               .toLowerCase()

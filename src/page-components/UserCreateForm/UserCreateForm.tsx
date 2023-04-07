@@ -2,11 +2,6 @@ import { Formik, Field, Form, FormikTouched } from 'formik';
 import { IUser, IWorkBorders } from '../../common/UserDataModel';
 import Select from 'react-select';
 import { useLoaderData, useNavigate } from 'react-router-dom';
-import {
-  addUser,
-  deleteUser,
-  modifyUser,
-} from '../../common/UserLocalStorageController';
 import { useSnackbar } from 'notistack';
 import {
   validateStringField,
@@ -15,14 +10,57 @@ import {
 } from './validateFunctions';
 import { rolesOptions, workBordersOptions } from './multiselectOptions';
 import { emptyUser, errorMessage } from './additionalFormConsts';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import { useEffect } from 'react';
+
+const ADD_USER = gql`
+  mutation addUser($user: [IUser]) {
+    addUser(user: $user) @client
+  }
+`;
+
+const MODIFY_USER = gql`
+  mutation modifyUser($user: [IUser]) {
+    modifyUser(user: $user) @client
+  }
+`;
+
+const DELETE_USER = gql`
+  mutation deleteUser($currentUserId: Int!) {
+    deleteUser(id: $currentUserId) @client
+  }
+`;
+
+const GET_USER_BY_ID = gql`
+  query GetUserById($currentUserId: Int!) {
+    getUserById(id: $currentUserId) @client {
+      firstName
+      id
+      lastName
+      username
+      workBorders
+      roles
+      password
+    }
+  }
+`;
 
 interface UserCreateFormProps {
-  currentUser: IUser;
+  currentUserId: number;
 }
 
 export const UserCreateForm = () => {
-  const { currentUser } = useLoaderData() as UserCreateFormProps;
-  const user = currentUser ?? emptyUser;
+  const { currentUserId } = useLoaderData() as UserCreateFormProps;
+
+  const { data } = useQuery(GET_USER_BY_ID, {
+    variables: { currentUserId },
+  });
+
+  const currentUser: IUser = data?.getUserById || emptyUser;
+
+  const [addUser] = useMutation(ADD_USER);
+  const [modifyUser] = useMutation(MODIFY_USER);
+  const [deleteUser] = useMutation(DELETE_USER);
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -31,18 +69,24 @@ export const UserCreateForm = () => {
     navigate('/');
   };
 
+  useEffect(() => {
+    console.log('hehe');
+  }, [currentUser]);
+
   return (
     <Formik
       validateOnChange={false}
       validateOnBlur={true}
       validateOnMount={true}
-      initialValues={user}
+      initialValues={currentUser}
       onSubmit={(user) => {
         const message = currentUser
           ? 'Пользователь успешно обновлён'
           : 'Пользователь успешно добавлен';
 
-        currentUser ? modifyUser(user) : addUser(user);
+        currentUser
+          ? modifyUser({ variables: { user } })
+          : addUser({ variables: { user } });
         goHome();
         enqueueSnackbar(message, {
           variant: 'success',
@@ -194,8 +238,9 @@ export const UserCreateForm = () => {
                       className="btn btn-primary"
                       onClick={() => {
                         const message = 'Пользователь успешно удалён';
-
-                        deleteUser(user.id);
+                        deleteUser({
+                          variables: { currentUserId: currentUser.id },
+                        });
                         goHome();
                         enqueueSnackbar(message, {
                           variant: 'success',
